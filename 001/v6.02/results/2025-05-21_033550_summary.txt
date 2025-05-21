@@ -1,0 +1,9 @@
+{
+  "engine": null,
+  "range": " → ",
+  "trades": null,
+  "win_pct": null,
+  "profit_factor": null,
+  "expect_pips": null,
+  "max_dd_pips": null
+}

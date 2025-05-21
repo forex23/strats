@@ -1,0 +1,9 @@
+**/data/**
+*.csv.gz
+*.tick
+*.parquet
+# editor / build artefacts
+*.pyc
+__pycache__/
+.idea/
+.vscode/

@@ -1,0 +1,156 @@
+"""
+backtest_wrapper.py – single-run orchestrator
+---------------------------------------------
+CLI example:
+    python applications/backtest_wrapper.py \
+           --engine 001/v6.02 --from 2025-03-01 --to 2025-03-31
+
+Writes JSON to:
+    <ENGINE_ROOT>/<engine>/results/<UTC-timestamp>.json
+Echoes one line:
+    JSON: <engine>/results/<file>.json      (parsed by /kick_bt)
+"""
+
+# ── make project root importable ───────────────────────────────────
+import sys, pathlib, datetime, argparse, json
+ROOT = pathlib.Path(__file__).resolve().parent.parent        # /home/tradeops/strats
+sys.path.insert(0, str(ROOT))
+
+# ── third-party & project imports ─────────────────────────────────
+from applications.metrics import generate_backtest_output
+import importlib.machinery, importlib.util
+
+# ── paths ─────────────────────────────────────────────────────────
+DATA_ROOT   = ROOT / "data"          # adjust loader to taste
+ENGINE_ROOT = ROOT                   # engines live directly under ROOT
+
+# --------------------------------------------------------------------
+# Flexible data loader: CSV cache first, fallback to Postgres
+# --------------------------------------------------------------------
+import calendar, datetime as dt, psycopg2, pandas as pd
+from pathlib import Path
+
+DATA_ROOT = Path("/home/tradeops/strats/data")
+PG_DSN    = "dbname=forex_data user=tradeops"
+TABLE_MAP = {"M1": "forex_rates_1m", "tick": "forex_quotes_raw"}  # extend as needed
+
+def _ensure_utc(df: pd.DataFrame) -> pd.DataFrame:
+    """Guarantee timestamp_utc is timezone-aware (UTC)."""
+    ts = df["timestamp_utc"]
+    if ts.dt.tz is None:
+        df["timestamp_utc"] = ts.dt.tz_localize("UTC")
+    return df
+
+def _csv_frame(sym, tf, ym):
+    """Return DataFrame if cached CSV (.csv or .csv.gz) exists, else None."""
+    for ext in (".csv", ".csv.gz"):
+        fp = DATA_ROOT / sym / tf / f"{ym}{ext}"
+        if fp.exists():
+            raw = pd.read_csv(fp, parse_dates=["timestamp_utc"])
+            return _ensure_utc(raw)        # <--- NEW
+    return None
+
+def _db_frame(sym, tf, year, month):
+    """Pull one-month slice from Postgres."""
+    first = dt.datetime(year, month, 1, tzinfo=dt.timezone.utc)
+    last  = dt.datetime(year, month, calendar.monthrange(year, month)[1], 23, 59,
+                        tzinfo=dt.timezone.utc)
+    tbl   = TABLE_MAP.get(tf, f"forex_rates_{tf.lower()}")
+    cols  = "timestamp_utc, open, high, low, close" if tf == "M1" else \
+            "timestamp_utc, bid_price, ask_price"
+    sql   = f"""
+        SELECT {cols}
+        FROM   {tbl}
+        WHERE  symbol = %s
+          AND  timestamp_utc BETWEEN %s AND %s
+        ORDER  BY timestamp_utc
+    """
+    with psycopg2.connect(PG_DSN) as con:
+        raw = pd.read_sql(sql, con, params=[sym, first, last])
+    return _ensure_utc(raw)                     # <--- NEW
+
+def load_bars(symbol: str, start: str, end: str, tf: str = "M1", cache_csv: bool = True):
+    """Glue CSVs (or DB pulls) across months, return DataFrame indexed by timestamp."""
+    start = pd.to_datetime(start, utc=True)   # always tz-aware
+    end   = pd.to_datetime(end,   utc=True)
+    frames     = []
+    for per in pd.period_range(start, end, freq="M"):
+        ym, yr, mo = per.strftime("%Y-%m"), per.year, per.month
+
+        df = _csv_frame(symbol, tf, ym)
+        if df is None:
+            df = _db_frame(symbol, tf, yr, mo)
+
+        if cache_csv and df is not None and _csv_frame(symbol, tf, ym) is None:
+            out = DATA_ROOT / symbol / tf
+            out.mkdir(parents=True, exist_ok=True)
+            df.to_csv(out / f"{ym}.csv", index=False,
+                      date_format="%Y-%m-%dT%H:%M:%SZ")   # explicit UTC in file
+        frames.append(df)
+    df = pd.concat(frames, ignore_index=True)
+    df = df[(df.timestamp_utc >= start) & (df.timestamp_utc <= end)]
+    return df.set_index("timestamp_utc")
+
+# ── engine loader that tolerates “001/v6.02” folder names ─────────
+def load_engine(engine_path: str):
+    eng_file = (ENGINE_ROOT / engine_path / "engine.py").resolve()
+    if not eng_file.is_file():
+        raise FileNotFoundError(f"Engine file not found: {eng_file}")
+    loader = importlib.machinery.SourceFileLoader("engine_mod", str(eng_file))
+    spec   = importlib.util.spec_from_loader(loader.name, loader)
+    eng_mod= importlib.util.module_from_spec(spec)
+    loader.exec_module(eng_mod)
+    return eng_mod
+
+# ── main entry - invoked by CLI or /kick_bt ───────────────────────
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--engine", required=True, help="e.g. 001/v6.02")
+    ap.add_argument("--from",   dest="start", required=True)
+    ap.add_argument("--to",     dest="end",   required=True)
+    ap.add_argument("--symbol", default="EURGBP")
+    ap.add_argument("--params", type=str, help='JSON or key1=val1,key2=val2')
+    ap.add_argument("--tf", choices=["M1", "tick"], default="M1",
+                    help="time-frame to load (M1 or tick)")
+
+    args = ap.parse_args()
+
+    engine = load_engine(args.engine)
+
+    bars = load_bars(args.symbol, args.start, args.end, tf=args.tf)
+
+    trade_log, equity = engine.run_backtest(bars)
+
+    params  = getattr(engine, "CFG", {})
+    results = generate_backtest_output(
+                 trade_log, equity, params, engine_file=args.engine)
+
+    res_dir = ENGINE_ROOT / args.engine / "results"
+    res_dir.mkdir(parents=True, exist_ok=True)
+    stamp   = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H%M%S")
+    out_path = res_dir / f"{stamp}.json"
+    out_path.write_text(json.dumps(results, indent=2, default=str))
+
+    # Echo for /kick_bt
+    print("JSON:", out_path.relative_to(ENGINE_ROOT))
+    return 0
+
+# --- ❸ override defaults ------------------------------------------------
+overrides = {}
+if args.params:
+    if args.params.strip().startswith("{"):          # full JSON blob
+        overrides = json.loads(args.params)
+    else:                                            # key1=val1,key2=val2
+        kv_pairs = [kv.split("=", 1) for kv in args.params.split(",")]
+        overrides = {k: (float(v) if "." in v else int(v)) for k, v in kv_pairs}
+
+# Merge with engine defaults
+cfg = {**getattr(engine, "CFG", {}), **overrides}
+
+if __name__ == "__main__":
+    sys.exit(main())
+
+trade_log, equity = engine.run_backtest(bars, cfg)   # pass merged cfg
+
+
+

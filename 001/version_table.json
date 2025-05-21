@@ -1,0 +1,165 @@
+{
+  "shared_exit_rules": {
+    "stop_distance_pips": 10,
+    "time_stop_min": 30,
+    "take_profit": "touch_30bar_SMA",
+    "session_hrs": "07:00-17:00 Europe/London"
+  },
+  "versions": [
+    {
+      "tag": "V1.0",
+      "signal": "Z",
+      "base_z": 1.25,
+      "step_z": 0.0,
+      "drift_pct": null,
+      "edge_pct": null,
+      "ticket_cap": "inf",
+      "results": {
+        "trades": 2442,
+        "win_rate": 70.3,
+        "expect_pips": 1.15,
+        "total_pips": 2800,
+        "profit_factor": 1.64,
+        "sharpe": 9.76,
+        "max_dd_pips": -596
+      }
+    },
+    {
+      "tag": "V1.1",
+      "signal": "Z",
+      "base_z": 1.25,
+      "step_z": 0.0,
+      "drift_pct": 0.2,
+      "edge_pct": null,
+      "ticket_cap": "inf",
+      "results": {
+        "trades": 34,
+        "win_rate": 52.9,
+        "expect_pips": -0.66,
+        "total_pips": -23,
+        "profit_factor": 0.84,
+        "sharpe": -0.44,
+        "max_dd_pips": -110
+      }
+    },
+    {
+      "tag": "V1.2",
+      "signal": "Z",
+      "base_z": 1.25,
+      "step_z": 0.0,
+      "drift_pct": 0.1,
+      "edge_pct": null,
+      "ticket_cap": "inf",
+      "results": {
+        "trades": 279,
+        "win_rate": 67.0,
+        "expect_pips": 1.9,
+        "total_pips": 530,
+        "profit_factor": 1.82,
+        "sharpe": 4.28,
+        "max_dd_pips": -290
+      }
+    },
+    {
+      "tag": "V2.0",
+      "signal": "Bollinger",
+      "base_z": 2.0,
+      "step_z": 0.0,
+      "drift_pct": null,
+      "edge_pct": null,
+      "ticket_cap": "inf",
+      "results": {
+        "trades": 675,
+        "win_rate": 70.7,
+        "expect_pips": 1.62,
+        "total_pips": 1094,
+        "profit_factor": 1.8,
+        "sharpe": 0.7,
+        "max_dd_pips": -274
+      }
+    },
+    {
+      "tag": "V3.0",
+      "signal": "Z",
+      "base_z": 2.0,
+      "step_z": 0.0,
+      "drift_pct": null,
+      "edge_pct": null,
+      "ticket_cap": "inf",
+      "results": {
+        "trades": 675,
+        "win_rate": 70.7,
+        "expect_pips": 1.62,
+        "total_pips": 1094,
+        "profit_factor": 1.8,
+        "sharpe": 0.7,
+        "max_dd_pips": -274
+      }
+    },
+    {
+      "tag": "V4.3",
+      "signal": "Z",
+      "base_z": 1.95,
+      "step_z": 0.25,
+      "drift_pct": 0.1,
+      "edge_pct": null,
+      "ticket_cap": 5,
+      "results": {
+        "trades": 174,
+        "win_rate": 73.9,
+        "expect_pips": 3.09,
+        "total_pips": 538,
+        "profit_factor": 2.62,
+        "sharpe": 5.48,
+        "max_dd_pips": -102
+      }
+    },
+    {
+      "tag": "V5.0",
+      "signal": "Z",
+      "base_z": 1.95,
+      "step_z": 0.25,
+      "drift_pct": 0.1,
+      "edge_pct": 15,
+      "ticket_cap": 5,
+      "results": {
+        "trades": 133,
+        "win_rate": 78.2,
+        "expect_pips": 3.77,
+        "total_pips": 502,
+        "profit_factor": 3.51,
+        "sharpe": 6.18,
+        "max_dd_pips": -71
+      }
+    },
+    {
+      "tag": "V5.01",
+      "signal": "Z",
+      "base_z": 1.95,
+      "step_z": 0.25,
+      "drift_pct": 0.001,
+      "edge_pct": 0.15,
+      "ticket_cap": 5,
+      "results": {
+        "trades": 112,
+        "win_rate": 75.0,
+        "expect_pips": 2.44,
+        "total_pips": 272.93,
+        "profit_factor": 2.36,
+        "sharpe": 0.0,
+        "max_dd_pips": -78
+      }
+    }
+  ],
+  "future_toggles": [
+    "size_taper_layer",
+    "range_ramp_sizing",
+    "time_bucket_sizing",
+    "cost_model",
+    "news_blackout",
+    "synthetic_gap_filter",
+    "volatility_shutoff",
+    "daily_pl_guard",
+    "tick_driven_entries"
+  ]
+}
