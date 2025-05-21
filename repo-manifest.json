@@ -1,6 +1,12 @@
 {
-  "generated": "2025-05-21T12:22:30.346012",
+  "generated": "2025-05-21T12:37:23.836021",
   "tree": [
+    {
+      "strat": "001/v6.02/latest_v6.02_summary.json",
+      "summary": "001/v6.02/latest_v6.02_summary.json",
+      "timestamp": "latest",
+      "sha": "5f61ce78"
+    },
     {
       "strat": "001/v6.02/OLD-results",
       "summary": "001/v6.02/OLD-results/OLD/20250521_064700_summary.json",
@@ -15,9 +21,15 @@
     },
     {
       "strat": "001/v6.02/results",
+      "summary": "001/v6.02/results/20250521_123723_summary.json",
+      "timestamp": "20250521",
+      "sha": "ec01d180"
+    },
+    {
+      "strat": "001/v6.02/results",
       "summary": "001/v6.02/results/latest_summary.json",
       "timestamp": "latest",
-      "sha": "5f61ce78"
+      "sha": "ec01d180"
     },
     {
       "strat": "001/v6.02/results",
