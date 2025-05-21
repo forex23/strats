@@ -1,5 +1,5 @@
 {
-  "generated": "2025-05-21T13:03:57.630234",
+  "generated": "2025-05-21T13:08:06.202891",
   "tree": [
     {
       "strat": "001/v6.02/backtests",
@@ -23,7 +23,7 @@
       "strat": "001/v6.02/backtests",
       "summary": "001/v6.02/backtests/latest_summary.json",
       "timestamp": "latest",
-      "sha": "f786b3b9"
+      "sha": "2ec36a90"
     },
     {
       "strat": "001/v6.02/backtests",
@@ -48,6 +48,12 @@
       "summary": "001/v6.02/backtests/20250521_121505_summary.json",
       "timestamp": "20250521",
       "sha": "d09847ed"
+    },
+    {
+      "strat": "001/v6.02/backtests",
+      "summary": "001/v6.02/backtests/20250521_130806_summary.json",
+      "timestamp": "20250521",
+      "sha": "2ec36a90"
     },
     {
       "strat": "001/v6.02/OLD-results",
