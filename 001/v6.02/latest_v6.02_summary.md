@@ -1,16 +1,34 @@
-### Summary 20250521_123723
-
-| Metric | Value |
-|--------|-------|
-| trades | 72 |
-| av_win_pips | 6.63 |
-| av_loss_pips | -7.25 |
-| total_pips | 241.30 |
-| expect_pips | 3.35 |
-| profit_factor | 2.96 |
-| sharpe | 0.48 |
-| avg_trade_len_min | 51.82 |
-| max_sim_trades | 1 |
-| win_streak_max | 22 |
-| loss_streak_max | 23 |
-| max_dd_pips | 42.40 |
+{
+  "engine": "001/v6.02",
+  "params": {
+    "base_z": 1.95,
+    "step_z": 0.25,
+    "drift": 0.001,
+    "edge_pct": 0.15,
+    "max_tix": 5,
+    "stop_pips": 10,
+    "time_min": 30
+  },
+  "trades": 72,
+  "win_%": 76.39,
+  "expect_pips": 3.35,
+  "total_pips": 241.3,
+  "av_win_pips": 6.63,
+  "av_loss_pips": -7.25,
+  "profit_factor": 2.96,
+  "sharpe": 0.48,
+  "max_dd_pips": 42.4,
+  "#_stop_hits": 11,
+  "stop_hit_%": 15.3,
+  "#_time_hits": 4,
+  "time_hit_%": 5.6,
+  "#_mean_hits": 57,
+  "mean_hit_%": 79.2,
+  "avg_trade_len_min": 51.82,
+  "#_sim_trades_gt1": 0,
+  "max_sim_trades": 1,
+  "win_streak_max": 22,
+  "loss_streak_max": 23,
+  "equity_curve_png": "20250521_125232_equity.png",
+  "trade_log_csv": "20250521_125232_trades.csv"
+}
