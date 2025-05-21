@@ -1,11 +1,17 @@
 {
-  "generated": "2025-05-21T14:59:11.519338",
+  "generated": "2025-05-21T15:05:20.369731",
   "tree": [
     {
       "strat": "002/v1/backtests",
       "summary": "002/v1/backtests/latest_summary.json",
       "timestamp": "latest",
-      "sha": "b9f0b081"
+      "sha": "6673e83d"
+    },
+    {
+      "strat": "002/v1/backtests",
+      "summary": "002/v1/backtests/20250521_150520_summary.json",
+      "timestamp": "20250521",
+      "sha": "6673e83d"
     },
     {
       "strat": "002/v1/backtests",
