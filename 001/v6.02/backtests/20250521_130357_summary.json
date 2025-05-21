@@ -29,6 +29,6 @@
   "max_sim_trades": 1,
   "win_streak_max": 22,
   "loss_streak_max": 23,
-  "equity_curve_png": "20250521_125232_equity.png",
-  "trade_log_csv": "20250521_125232_trades.csv"
+  "equity_curve_png": "20250521_130357_equity.png",
+  "trade_log_csv": "20250521_130357_trades.csv"
 }
