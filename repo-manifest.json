@@ -1,11 +1,23 @@
 {
-  "generated": "2025-05-21T12:15:05.698172",
+  "generated": "2025-05-21T12:22:30.346012",
   "tree": [
     {
       "strat": "001/v6.02/OLD-results",
       "summary": "001/v6.02/OLD-results/OLD/20250521_064700_summary.json",
       "timestamp": "20250521",
       "sha": "c18fef6c"
+    },
+    {
+      "strat": "001/v6.02/results",
+      "summary": "001/v6.02/results/20250521_122230_summary.json",
+      "timestamp": "20250521",
+      "sha": "5f61ce78"
+    },
+    {
+      "strat": "001/v6.02/results",
+      "summary": "001/v6.02/results/latest_summary.json",
+      "timestamp": "latest",
+      "sha": "5f61ce78"
     },
     {
       "strat": "001/v6.02/results",
